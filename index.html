@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="da">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Månedsrapport</title>
+        <style>
+            body {
+                width: 75%;
+                text-align: center;
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            header {
+                text-align: left;
+                background: #009ce2;
+                color: white;
+                padding: 10px;
+                margin-bottom: 40px;
+            }
+            h2 {
+                color: #006796;
+                text-decoration: underline;
+                font-size: 28px;
+                margin-top: 60px;
+            }
+            .h2_top {
+                margin-top: 40px;
+            }
+            .btn {
+                border: none;
+                padding: 10px 15px;
+                margin: 5px;
+                cursor: pointer;
+                border-radius: 4px;
+                font-weight: bold;
+            }
+            .stat {
+                color: #009ce2;
+                font-size: 20px;
+                margin-top: 20px;
+            }
+            .stat img {
+                max-width: 1000px;
+                height: 500px;
+            }
+            .export {
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header><h1>Statistikoversigt</h1></header>
+
+            <div>
+                <button
+                    class="btn"
+                    style="background-color: #009ce2; color: white"
+                    onclick="selectGroup('Alle afdelinger')"
+                >
+                    Alle afdelinger
+                </button>
+                <button
+                    class="btn"
+                    style="background-color: #e6e94e; color: black"
+                    onclick="selectGroup('VA1')"
+                >
+                    VA1
+                </button>
+                <button
+                    class="btn"
+                    style="background-color: #4ee975; color: black"
+                    onclick="selectGroup('VA2')"
+                >
+                    VA2
+                </button>
+                <button
+                    class="btn"
+                    style="background-color: #e94e4e; color: black"
+                    onclick="selectGroup('VA3')"
+                >
+                    VA3
+                </button>
+            </div>
+
+            <section id="content"></section>
+        </div>
+        <button class="btn export" onclick="exportPDF()">
+            Eksportér til PDF
+        </button>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+        <script>
+            const data = {
+                'Alle afdelinger': {
+                    R86: [
+                        {
+                            title: 'VA - Samlet - R86',
+                            img: 'images/R86/Va_samlet/AIVVB.png',
+                        },
+                        {
+                            title: 'VA - Samlet - R86',
+                            img: 'images/R86/Va_samlet/AIVVBAFD.png',
+                        },
+                        {
+                            title: 'VA - Samlet - R86',
+                            img: 'images/R86/Va_samlet/AIVVK.png',
+                        },
+                        {
+                            title: 'VA - Samlet - R86',
+                            img: 'images/R86/Va_samlet/AIVJO.png',
+                        },
+                    ],
+                    R188: [
+                        {
+                            title: 'VA - Samlet - R188',
+                            img: 'images/R188/Va_samlet/FASRAF.png',
+                        },
+                        {
+                            title: 'VA - Samlet - R188',
+                            img: 'images/R188/Va_samlet/FASRAA.png',
+                        },
+                    ],
+                    R189: [
+                        {
+                            title: 'VA - Samlet - R189',
+                            img: 'images/R189/Va_samlet/Kontaktafd.png',
+                        },
+                        {
+                            title: 'VA - Samlet - R189',
+                            img: 'images/R189/Va_samlet/Kontaktakk.png',
+                        },
+                        {
+                            title: 'VA - Samlet - R189',
+                            img: 'images/R189/Va_samlet/Kontaktform.png',
+                        },
+                        {
+                            title: 'VA - Samlet - R189',
+                            img: 'images/R189/Va_samlet/virksomhedsbank.png',
+                        },
+                    ],
+                },
+                VA1: {
+                    R86: [
+                        {
+                            title: 'VA1',
+                            img: 'images/dummy1.png',
+                        },
+                    ],
+                    R188: [
+                        {
+                            title: 'VA1',
+                            img: 'images/dummy1.png',
+                        },
+                    ],
+                    R189: [{ title: 'VA1', img: 'images/dummy1.png' }],
+                },
+                VA2: {
+                    R86: [
+                        {
+                            title: 'VA2',
+                            img: 'images/dummy1.png',
+                        },
+                    ],
+                    R188: [
+                        {
+                            title: 'VA2',
+                            img: 'images/dummy1.png',
+                        },
+                    ],
+                    R189: [{ title: 'VA2', img: 'images/dummy1.png' }],
+                },
+                VA3: {
+                    R86: [
+                        {
+                            title: 'VA3 - R86',
+                            img: 'images/R86/VA3/VA3/AIVVB.png',
+                        },
+                        {
+                            title: 'VA3 - R86',
+                            img: 'images/R86/VA3/VA3/AIVVK.png',
+                        },
+                        {
+                            title: 'VA3 - R86',
+                            img: 'images/R86/VA3/VA3/AIVJO.png',
+                        },
+                        {
+                            title: 'BYG - R86',
+                            img: 'images/R86/VA3/Byg/AIVVB.png',
+                        },
+                        {
+                            title: 'BYG - R86',
+                            img: 'images/R86/VA3/Byg/AIVVK.png',
+                        },
+                        {
+                            title: 'BYG - R86',
+                            img: 'images/R86/VA3/Byg/AIVJO.png',
+                        },
+                        {
+                            title: 'IND - R86',
+                            img: 'images/R86/VA3/Industri/AIVVB.png',
+                        },
+                        {
+                            title: 'IND - R86',
+                            img: 'images/R86/VA3/Industri/AIVVK.png',
+                        },
+                        {
+                            title: 'IND - R86',
+                            img: 'images/R86/VA3/Industri/AIVJO.png',
+                        },
+                        {
+                            title: 'LT - R86',
+                            img: 'images/R86/VA3/LT/AIVVB.png',
+                        },
+                        {
+                            title: 'LT - R86',
+                            img: 'images/R86/VA3/LT/AIVVK.png',
+                        },
+                        {
+                            title: 'LT - R86',
+                            img: 'images/R86/VA3/LT/AIVJO.png',
+                        },
+                        {
+                            title: 'SD - R86',
+                            img: 'images/R86/VA3/SD/AIVVB.png',
+                        },
+                        {
+                            title: 'SD - R86',
+                            img: 'images/R86/VA3/SD/AIVVK.png',
+                        },
+                        {
+                            title: 'SD - R86',
+                            img: 'images/R86/VA3/SD/AIVJO.png',
+                        },
+                    ],
+                    R188: [
+                        {
+                            title: 'VA3 - R188',
+                            img: 'images/R188/VA3/VA3/FA.png',
+                        },
+                        {
+                            title: 'BYG - R188',
+                            img: 'images/R188/VA3/Byg/FA.png',
+                        },
+                        {
+                            title: 'IND - R188',
+                            img: 'images/R188/VA3/Industri/FA.png',
+                        },
+                        {
+                            title: 'LT - R188',
+                            img: 'images/R188/VA3/LT/FA.png',
+                        },
+                        {
+                            title: 'SD - R188',
+                            img: 'images/R188/VA3/SD/FA.png',
+                        },
+                    ],
+                    R189: [
+                        {
+                            title: 'VA3 - R189',
+                            img: 'images/R189/VA3/VA3/kontaktakk.png',
+                        },
+                        {
+                            title: 'VA3 - R189',
+                            img: 'images/R189/VA3/VA3/kontaktform.png',
+                        },
+                        {
+                            title: 'BYG - R189',
+                            img: 'images/R189/VA3/Byg/kontaktakk.png',
+                        },
+                        {
+                            title: 'BYG - R189',
+                            img: 'images/R189/VA3/Byg/kontaktform.png',
+                        },
+                        {
+                            title: 'IND - R189',
+                            img: 'images/R189/VA3/Industri/kontaktakk.png',
+                        },
+                        {
+                            title: 'IND - R189',
+                            img: 'images/R189/VA3/Industri/kontaktform.png',
+                        },
+                        {
+                            title: 'LT - R189',
+                            img: 'images/R189/VA3/LT/kontaktakk.png',
+                        },
+                        {
+                            title: 'LT - R189',
+                            img: 'images/R189/VA3/LT/kontaktform.png',
+                        },
+                        {
+                            title: 'SD - R189',
+                            img: 'images/R189/VA3/SD/kontaktakk.png',
+                        },
+                        {
+                            title: 'SD - R189',
+                            img: 'images/R189/VA3/SD/kontaktform.png',
+                        },
+                    ],
+                },
+            };
+
+            let selectedGroup = 'Alle afdelinger';
+
+            function selectGroup(group) {
+                selectedGroup = group;
+                renderContent();
+            }
+
+            function renderContent() {
+                const content = document.getElementById('content');
+                content.innerHTML = '';
+                const headers = ['R86', 'R188', 'R189'];
+                const headerTitles = {
+                    R86: 'Aktiviteter i Virksomhed (R86)',
+                    R188: 'Formidlings- og ansættelsesgrad (R188)',
+                    R189: 'Kontaktstrategien (R189)',
+                };
+                const groupData = data[selectedGroup];
+                headers.forEach((header) => {
+                    const items = groupData[header] || [];
+                    if (items.length) {
+                        const h2 = document.createElement('h2');
+                        h2.textContent = headerTitles[header];
+                        content.appendChild(h2);
+                        items.forEach((item) => {
+                            const div = document.createElement('div');
+                            div.className = 'stat';
+                            div.innerHTML = `<h3>${item.title}</h3><img src="${item.img}" alt="${item.title}" onerror="this.src='images/default-image.png';">`;
+                            content.appendChild(div);
+                        });
+                    }
+                });
+            }
+
+            // PDF-eksport
+            async function exportPDF() {
+                const { jsPDF } = window.jspdf.jsPDF
+                    ? window.jspdf
+                    : window.jspdf;
+                const pdf = new jsPDF('l', 'mm', 'a4');
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const quality = 1;
+
+                const stats = document.querySelectorAll('.stat');
+                for (let idx = 0; idx < stats.length; idx++) {
+                    const stat = stats[idx];
+                    const imgEl = stat.querySelector('img');
+                    const title = stat.querySelector('h3').innerText;
+
+                    if (!imgEl.complete) {
+                        await new Promise((resolve) => {
+                            imgEl.onload = resolve;
+                            imgEl.onerror = resolve;
+                        });
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = imgEl.naturalWidth;
+                    canvas.height = imgEl.naturalHeight;
+                    ctx.drawImage(imgEl, 0, 0);
+                    const imgData = canvas.toDataURL('image/jpeg', quality);
+
+                    const imgWidth = imgEl.naturalWidth;
+                    const imgHeight = imgEl.naturalHeight;
+                    const maxWidth = pageWidth * 0.75;
+                    const maxHeight = pageHeight * 0.75;
+                    const ratio = Math.min(
+                        maxWidth / imgWidth,
+                        maxHeight / imgHeight
+                    );
+                    const scaledWidth = imgWidth * ratio;
+                    const scaledHeight = imgHeight * ratio;
+
+                    if (idx > 0) pdf.addPage();
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setFontSize(18);
+                    pdf.setTextColor(0, 156, 226);
+                    pdf.text(title, pageWidth / 2, 20, { align: 'center' });
+
+                    const offsetX = (pageWidth - scaledWidth) / 2;
+                    const offsetY = 35;
+                    pdf.addImage(
+                        imgData,
+                        'JPEG',
+                        offsetX,
+                        offsetY,
+                        scaledWidth,
+                        scaledHeight,
+                        undefined,
+                        'FAST'
+                    );
+                }
+
+                pdf.save('statistik.pdf');
+            }
+
+            // initial
+            selectGroup('Alle afdelinger');
+        </script>
+    </body>
+</html>
