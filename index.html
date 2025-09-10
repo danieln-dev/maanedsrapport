@@ -53,7 +53,10 @@
     <body>
         <div class="container">
             <header><h1>Statistikoversigt</h1></header>
-
+            
+            <button class="btn export" onclick="exportPDF()">
+                Eksportér til PDF
+            </button>
             <div>
                 <button
                     class="btn"
@@ -87,9 +90,6 @@
 
             <section id="content"></section>
         </div>
-        <button class="btn export" onclick="exportPDF()">
-            Eksportér til PDF
-        </button>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
