@@ -354,7 +354,7 @@
                     if (!imgEl.complete) {
                         await new Promise((resolve) => {
                             imgEl.onload = resolve;
-                            imgEl.onerror = resolve;
+                            // imgEl.onerror = resolve;
                         });
                     }
 
